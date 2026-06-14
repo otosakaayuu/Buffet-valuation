@@ -207,9 +207,49 @@ hr{border:none;border-top:1px solid var(--border);margin:22px 0}
 .breakdown-of{font-size:10px;color:var(--dim)}
 .breakdown-lbl{font-size:10px;text-transform:uppercase;letter-spacing:.8px;color:var(--dim);margin-bottom:2px}
 
+/* ─── METRIC EXPANDED CARDS ─── */
+.met-card{background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:14px 16px;display:flex;flex-direction:column;gap:0}
+.met-head{display:flex;align-items:flex-start;justify-content:space-between;gap:8px;margin-bottom:10px}
+.met-name{font-size:11px;font-weight:700;color:var(--cream);line-height:1.4}
+.bench-pill{font-size:9px;padding:2px 8px;border-radius:10px;font-family:var(--mono);font-weight:700;white-space:nowrap;flex-shrink:0;margin-top:1px}
+.bench-great{background:rgba(40,181,107,.18);color:var(--green2);border:1px solid rgba(40,181,107,.25)}
+.bench-good{background:rgba(201,164,76,.18);color:var(--gold);border:1px solid rgba(201,164,76,.25)}
+.bench-warn{background:rgba(176,48,48,.18);color:var(--red2);border:1px solid rgba(176,48,48,.25)}
+.met-input-wrap{position:relative;margin-bottom:10px}
+.met-input-wrap input{width:100%;padding-right:32px;background:var(--bg3);border:1px solid var(--border);border-radius:6px;padding:9px 36px 9px 12px;color:var(--cream);font-family:var(--mono);font-size:15px;outline:none;transition:border-color .2s}
+.met-input-wrap input:focus{border-color:var(--gold)}
+.met-unit{position:absolute;right:12px;top:50%;transform:translateY(-50%);font-family:var(--mono);font-size:12px;color:var(--gold);pointer-events:none;font-weight:600}
+/* Formula box */
+.fmla-box{background:var(--bg);border:1px solid rgba(201,164,76,.14);border-radius:7px;padding:10px 12px;margin-bottom:9px}
+.fmla-lbl{font-size:8px;letter-spacing:1.8px;text-transform:uppercase;color:var(--gold);font-family:var(--mono);font-weight:700;margin-bottom:7px;display:flex;align-items:center;gap:6px}
+.fmla-lbl::after{content:'';flex:1;height:1px;background:rgba(201,164,76,.15)}
+.fmla-eq{font-family:var(--mono);font-size:11.5px;color:var(--gold2);line-height:2;margin-bottom:5px;padding-bottom:7px;border-bottom:1px solid rgba(255,255,255,.06)}
+.fmla-vars{font-family:var(--mono);font-size:10px;color:var(--dim);line-height:1.9;margin-top:6px}
+.fmla-vars b{color:var(--cream)}
+/* Benchmark tags row */
+.bench-row{display:flex;flex-wrap:wrap;gap:4px;margin-bottom:9px}
+.bl{font-size:9px;padding:2px 7px;border-radius:5px;font-family:var(--mono);font-weight:600}
+.bl-g{background:rgba(40,181,107,.12);color:var(--green2)}
+.bl-y{background:rgba(201,164,76,.12);color:var(--gold)}
+.bl-r{background:rgba(176,48,48,.12);color:var(--red2)}
+/* Inline Buffett quote */
+.bq-inline{border-left:2px solid rgba(201,164,76,.35);padding-left:10px;margin-top:2px}
+.bq-text{font-family:var(--serif);font-style:italic;font-size:11px;line-height:1.65;color:var(--dim);margin-bottom:4px}
+.bq-text em{color:var(--cream);font-style:normal}
+.bq-attr{font-family:var(--mono);font-size:9px;color:var(--gold);opacity:.8;letter-spacing:.2px}
+/* DCF formula callouts */
+.dcf-fmla{background:var(--bg);border:1px solid rgba(201,164,76,.12);border-radius:7px;padding:10px 14px;margin:10px 0 0}
+.dcf-fmla-title{font-size:8px;letter-spacing:1.5px;text-transform:uppercase;color:var(--gold);font-family:var(--mono);margin-bottom:7px}
+.dcf-eq{font-family:var(--mono);font-size:11px;color:var(--gold2);line-height:2}
+.dcf-note{font-size:10px;color:var(--dim);margin-top:5px;line-height:1.6;border-top:1px solid rgba(255,255,255,.05);padding-top:7px}
+.dcf-note b{color:var(--cream)}
+.dcf-quote{font-family:var(--serif);font-style:italic;font-size:11px;color:var(--dim);border-left:2px solid rgba(201,164,76,.3);padding-left:8px;margin-top:8px;line-height:1.6}
+.dcf-quote-attr{font-family:var(--mono);font-size:9px;color:var(--gold);margin-top:3px;opacity:.8}
+.grid-met{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px}
+
 /* ─── RESPONSIVE ─── */
-@media(max-width:500px){
-  .grid-2,.grid-3,.breakdown-grid{grid-template-columns:1fr}
+@media(max-width:520px){
+  .grid-2,.grid-3,.breakdown-grid,.grid-met{grid-template-columns:1fr}
   .site-header{flex-direction:column;gap:12px}
   .gauge-wrap{margin-left:0;width:100%;justify-content:space-between}
   .gauge-div{display:none}
@@ -298,37 +338,188 @@ hr{border:none;border-top:1px solid var(--border);margin:22px 0}
 
   <div class="section-lbl">Metrik Keuangan Fundamental</div>
 
-  <div class="grid-3">
-    <div class="metric-card">
-      <div class="metric-label">ROE (%)</div>
-      <input type="number" id="m-roe" placeholder="20" oninput="updateMetrics()" style="text-align:center;margin-top:4px">
-      <div class="metric-bench">Buffett min: 15%</div>
+  <div class="grid-met">
+
+    <!-- ① ROE -->
+    <div class="met-card">
+      <div class="met-head">
+        <div class="met-name">① Return on Equity (ROE)</div>
+        <span class="bench-pill bench-great">Min: 15%</span>
+      </div>
+      <div class="met-input-wrap">
+        <input type="number" id="m-roe" placeholder="20" oninput="updateMetrics()">
+        <span class="met-unit">%</span>
+      </div>
+      <div class="fmla-box">
+        <div class="fmla-lbl">Formula</div>
+        <div class="fmla-eq">ROE = Net Income ÷ Shareholders' Equity × 100</div>
+        <div class="fmla-vars">
+          <b>Net Income</b> = laba bersih setelah pajak<br>
+          <b>Equity</b> = total modal pemegang saham<br>
+          <b>Pakai rata-rata</b> 3 tahun untuk konsistensi
+        </div>
+      </div>
+      <div class="bench-row">
+        <span class="bl bl-g">&gt;25% Excellent</span>
+        <span class="bl bl-y">15–25% Good</span>
+        <span class="bl bl-r">&lt;15% Weak</span>
+      </div>
+      <div class="bq-inline">
+        <div class="bq-text">"We favor businesses earning <em>good returns on equity while employing little or no debt</em> — not high returns that are simply a product of high leverage."</div>
+        <div class="bq-attr">— Buffett · Annual Letter 1977</div>
+      </div>
     </div>
-    <div class="metric-card">
-      <div class="metric-label">ROIC (%)</div>
-      <input type="number" id="m-roic" placeholder="15" oninput="updateMetrics()" style="text-align:center;margin-top:4px">
-      <div class="metric-bench">Great: >12%</div>
+
+    <!-- ② ROIC -->
+    <div class="met-card">
+      <div class="met-head">
+        <div class="met-name">② Return on Invested Capital (ROIC)</div>
+        <span class="bench-pill bench-great">Min: 12%</span>
+      </div>
+      <div class="met-input-wrap">
+        <input type="number" id="m-roic" placeholder="15" oninput="updateMetrics()">
+        <span class="met-unit">%</span>
+      </div>
+      <div class="fmla-box">
+        <div class="fmla-lbl">Formula</div>
+        <div class="fmla-eq">ROIC = NOPAT ÷ Invested Capital × 100</div>
+        <div class="fmla-vars">
+          <b>NOPAT</b> = Net Operating Profit After Tax<br>
+          <b>Invested Capital</b> = Total Debt + Equity − Cash<br>
+          <b>Harus &gt; WACC</b> untuk create value
+        </div>
+      </div>
+      <div class="bench-row">
+        <span class="bl bl-g">&gt;20% Exceptional</span>
+        <span class="bl bl-y">12–20% Strong</span>
+        <span class="bl bl-r">&lt;12% Below avg</span>
+      </div>
+      <div class="bq-inline">
+        <div class="bq-text">"The best business to own is one that <em>can employ large amounts of incremental capital at very high rates of return</em> over an extended period."</div>
+        <div class="bq-attr">— Buffett · Annual Letter 1992</div>
+      </div>
     </div>
-    <div class="metric-card">
-      <div class="metric-label">Gross Margin (%)</div>
-      <input type="number" id="m-gm" placeholder="40" oninput="updateMetrics()" style="text-align:center;margin-top:4px">
-      <div class="metric-bench">Moat signal: >40%</div>
+
+    <!-- ③ GROSS MARGIN -->
+    <div class="met-card">
+      <div class="met-head">
+        <div class="met-name">③ Gross Profit Margin</div>
+        <span class="bench-pill bench-good">Moat signal: &gt;40%</span>
+      </div>
+      <div class="met-input-wrap">
+        <input type="number" id="m-gm" placeholder="40" oninput="updateMetrics()">
+        <span class="met-unit">%</span>
+      </div>
+      <div class="fmla-box">
+        <div class="fmla-lbl">Formula</div>
+        <div class="fmla-eq">Gross Margin = (Revenue − COGS) ÷ Revenue × 100</div>
+        <div class="fmla-vars">
+          <b>Revenue</b> = total pendapatan penjualan<br>
+          <b>COGS</b> = Cost of Goods Sold (biaya langsung)<br>
+          <b>Trend</b> yang stabil lebih penting dari angka sesaat
+        </div>
+      </div>
+      <div class="bench-row">
+        <span class="bl bl-g">&gt;60% Strong moat</span>
+        <span class="bl bl-y">40–60% Pricing power</span>
+        <span class="bl bl-r">&lt;40% Commoditized</span>
+      </div>
+      <div class="bq-inline">
+        <div class="bq-text">"Gross margin is the first wall of the castle. <em>A business that maintains high gross margins over decades is telling you something profound about its competitive position</em> that no spreadsheet can fully capture."</div>
+        <div class="bq-attr">— Buffett · Shareholder Meeting 2009</div>
+      </div>
     </div>
-    <div class="metric-card">
-      <div class="metric-label">Net Margin (%)</div>
-      <input type="number" id="m-nm" placeholder="15" oninput="updateMetrics()" style="text-align:center;margin-top:4px">
-      <div class="metric-bench">Good: >10%</div>
+
+    <!-- ④ NET MARGIN -->
+    <div class="met-card">
+      <div class="met-head">
+        <div class="met-name">④ Net Profit Margin</div>
+        <span class="bench-pill bench-good">Target: &gt;10%</span>
+      </div>
+      <div class="met-input-wrap">
+        <input type="number" id="m-nm" placeholder="15" oninput="updateMetrics()">
+        <span class="met-unit">%</span>
+      </div>
+      <div class="fmla-box">
+        <div class="fmla-lbl">Formula</div>
+        <div class="fmla-eq">Net Margin = Net Income ÷ Revenue × 100</div>
+        <div class="fmla-vars">
+          <b>Net Income</b> = setelah semua biaya, bunga & pajak<br>
+          <b>Revenue</b> = total pendapatan<br>
+          <b>Bandingkan</b> dengan kompetitor di industri sama
+        </div>
+      </div>
+      <div class="bench-row">
+        <span class="bl bl-g">&gt;20% Exceptional</span>
+        <span class="bl bl-y">10–20% Good</span>
+        <span class="bl bl-r">&lt;5% Thin — risky</span>
+      </div>
+      <div class="bq-inline">
+        <div class="bq-text">"The single most important decision in evaluating a business is <em>pricing power</em>. If you've got the power to raise prices without losing business to a competitor, you've got a very good business. If you have to have a prayer session before raising the price by a tenth of a cent, you've got a terrible business."</div>
+        <div class="bq-attr">— Buffett · CNBC Interview 2011</div>
+      </div>
     </div>
-    <div class="metric-card">
-      <div class="metric-label">Debt/Equity</div>
-      <input type="number" id="m-de" placeholder="0.5" step="0.1" oninput="updateMetrics()" style="text-align:center;margin-top:4px">
-      <div class="metric-bench">Buffett max: ~1.0</div>
+
+    <!-- ⑤ DEBT/EQUITY -->
+    <div class="met-card">
+      <div class="met-head">
+        <div class="met-name">⑤ Debt / Equity Ratio</div>
+        <span class="bench-pill bench-good">Buffett max: 1.0×</span>
+      </div>
+      <div class="met-input-wrap">
+        <input type="number" id="m-de" placeholder="0.5" step="0.1" oninput="updateMetrics()">
+        <span class="met-unit">×</span>
+      </div>
+      <div class="fmla-box">
+        <div class="fmla-lbl">Formula</div>
+        <div class="fmla-eq">D/E = Total Debt ÷ Shareholders' Equity</div>
+        <div class="fmla-vars">
+          <b>Total Debt</b> = short-term + long-term debt<br>
+          <b>Equity</b> = book value of shareholders' equity<br>
+          <b>Exclude</b> goodwill dari equity untuk akurasi
+        </div>
+      </div>
+      <div class="bench-row">
+        <span class="bl bl-g">&lt;0.5× Very safe</span>
+        <span class="bl bl-y">0.5–1.0× OK</span>
+        <span class="bl bl-r">&gt;2.0× Danger zone</span>
+      </div>
+      <div class="bq-inline">
+        <div class="bq-text">"I've seen more people fail because of <em>liquor and leverage</em> — leverage being borrowed money. You really don't need leverage in this world much. If you're smart, you're going to make a lot of money without borrowing."</div>
+        <div class="bq-attr">— Buffett · Shareholder Meeting 2002</div>
+      </div>
     </div>
-    <div class="metric-card">
-      <div class="metric-label">FCF Growth %/yr</div>
-      <input type="number" id="m-fcf" placeholder="12" oninput="updateMetrics()" style="text-align:center;margin-top:4px">
-      <div class="metric-bench">Consistent: key</div>
+
+    <!-- ⑥ FCF GROWTH -->
+    <div class="met-card">
+      <div class="met-head">
+        <div class="met-name">⑥ Free Cash Flow Growth</div>
+        <span class="bench-pill bench-good">Target: &gt;10%/yr</span>
+      </div>
+      <div class="met-input-wrap">
+        <input type="number" id="m-fcf" placeholder="12" oninput="updateMetrics()">
+        <span class="met-unit">%</span>
+      </div>
+      <div class="fmla-box">
+        <div class="fmla-lbl">Formula</div>
+        <div class="fmla-eq">FCF = Operating Cash Flow − CapEx<br>FCF Growth = (FCF₁ − FCF₀) ÷ FCF₀ × 100</div>
+        <div class="fmla-vars">
+          <b>Op. Cash Flow</b> = dari laporan arus kas operasi<br>
+          <b>CapEx</b> = pengeluaran modal (maintenance only)<br>
+          <b>Cek konsistensi</b> minimal 5–7 tahun ke belakang
+        </div>
+      </div>
+      <div class="bench-row">
+        <span class="bl bl-g">&gt;15%/yr Compounding</span>
+        <span class="bl bl-y">8–15%/yr Solid</span>
+        <span class="bl bl-r">&lt;5%/yr Stagnant</span>
+      </div>
+      <div class="bq-inline">
+        <div class="bq-text">"The formula is to find businesses that <em>generate large amounts of cash with little capital investment</em> required to maintain their competitive position — then deploy that cash wisely elsewhere."</div>
+        <div class="bq-attr">— Buffett · Berkshire Annual Meeting 1998</div>
+      </div>
     </div>
+
   </div>
 
   <div class="card" id="metrics-result">
@@ -429,32 +620,61 @@ hr{border:none;border-top:1px solid var(--border);margin:22px 0}
     <div class="q-attr">— Warren Buffett · Owner's Manual, 1996</div>
   </div>
 
-  <div class="tip">
-    <strong>Formula Owner Earnings Buffett:</strong><br>
-    Owner Earnings = Net Income + D&A − Maintenance CapEx ± Working Capital Changes<br><br>
-    Berbeda dari EBITDA yang disebut Buffett sebagai <strong>"a flawed favorite of those who wish to downplay capital requirements"</strong> — karena EBITDA mengabaikan CapEx yang wajib dilakukan untuk mempertahankan bisnis.
+  <!-- OWNER EARNINGS FORMULA BLOCK -->
+  <div class="fmla-box" style="margin-bottom:18px">
+    <div class="fmla-lbl">⑦ Master Formula — Owner Earnings</div>
+    <div class="fmla-eq">Owner Earnings = Net Income + D&amp;A − Maintenance CapEx ± ΔWorking Capital</div>
+    <div class="fmla-vars">
+      <b>Net Income</b> = laba bersih setelah pajak (GAAP)<br>
+      <b>D&amp;A</b> = Depreciation &amp; Amortization — non-cash, ditambahkan kembali<br>
+      <b>Maintenance CapEx</b> = capex WAJIB untuk mempertahankan posisi bisnis saat ini<br>
+      <b>ΔWorking Capital</b> = perubahan modal kerja (+ = keluar, − = masuk)<br>
+      <b>Bukan EBITDA:</b> EBITDA mengabaikan CapEx yang wajib → menyesatkan
+    </div>
+    <div class="dcf-quote">"EBITDA is a flawed favorite of those who wish to downplay capital requirements. Owners of businesses with heavy depreciation should never forget that someone must maintain the assets — and that costs real money."</div>
+    <div class="dcf-quote-attr">— Buffett · Annual Letter 2000</div>
   </div>
 
   <div class="grid-2">
     <div class="field">
-      <div class="field-hd"><span class="field-name">Net Income (juta $)</span></div>
+      <div class="field-hd"><span class="field-name">① Net Income (juta $)</span></div>
       <input type="number" id="net-income" placeholder="e.g. 100" oninput="calcAll()">
-      <div class="field-sub">Laba bersih setelah pajak, rata-rata 3 tahun</div>
+      <div class="dcf-fmla">
+        <div class="dcf-fmla-title">Cara baca</div>
+        <div class="dcf-note"><b>Gunakan rata-rata 3 tahun</b> — bukan tahun terbaik atau terburuk. Buffett mencari bisnis dengan laba yang konsisten dan predictable, bukan yang volatile.</div>
+        <div class="dcf-quote">"Look for consistent earnings power, not earnings that are great one year and terrible the next. Consistency is what tells you the moat is real."</div>
+        <div class="dcf-quote-attr">— Buffett · Shareholder Meeting 1994</div>
+      </div>
     </div>
     <div class="field">
-      <div class="field-hd"><span class="field-name">D&A — Depresiasi & Amortisasi (juta $)</span></div>
+      <div class="field-hd"><span class="field-name">② D&A — Depresiasi &amp; Amortisasi (juta $)</span></div>
       <input type="number" id="dna" placeholder="e.g. 20" oninput="calcAll()">
-      <div class="field-sub">Ditambahkan karena bukan cash keluar</div>
+      <div class="dcf-fmla">
+        <div class="dcf-fmla-title">Cara baca</div>
+        <div class="dcf-note"><b>D&amp;A adalah biaya akuntansi, bukan cash keluar.</b> Ditambahkan kembali ke Net Income karena tidak mengurangi kas perusahaan secara langsung. Dari laporan arus kas — bagian "non-cash adjustments."</div>
+        <div class="dcf-quote">"Depreciation is a real cost, but the cash went out years ago when the asset was purchased. Today, that non-cash charge flows through income but leaves cash intact."</div>
+        <div class="dcf-quote-attr">— Buffett · Owner's Manual 1996</div>
+      </div>
     </div>
     <div class="field">
-      <div class="field-hd"><span class="field-name">Maintenance CapEx (juta $)</span></div>
+      <div class="field-hd"><span class="field-name">③ Maintenance CapEx (juta $)</span></div>
       <input type="number" id="capex" placeholder="e.g. 15" oninput="calcAll()">
-      <div class="field-sub">Hanya untuk mempertahankan, bukan ekspansi</div>
+      <div class="dcf-fmla">
+        <div class="dcf-fmla-title">Penting: bukan total CapEx</div>
+        <div class="dcf-note"><b>Hanya CapEx untuk mempertahankan posisi,</b> bukan untuk ekspansi. Ini adalah "real cost" yang harus dikurangi. Rule of thumb: 50-70% dari total CapEx untuk bisnis mature. Capital-light business punya rasio rendah di sini.</div>
+        <div class="dcf-quote">"There are two kinds of businesses: those that spend much of their earnings maintaining current competitive position, and those that are able to grow without much reinvestment. The latter is what we seek."</div>
+        <div class="dcf-quote-attr">— Buffett · Annual Letter 1992</div>
+      </div>
     </div>
     <div class="field">
-      <div class="field-hd"><span class="field-name">Working Capital Change (juta $)</span></div>
+      <div class="field-hd"><span class="field-name">④ Working Capital Change (juta $)</span></div>
       <input type="number" id="wc" placeholder="e.g. 5" oninput="calcAll()">
-      <div class="field-sub">Positif = butuh lebih banyak modal kerja</div>
+      <div class="dcf-fmla">
+        <div class="dcf-fmla-title">Cara baca</div>
+        <div class="dcf-note"><b>Positif = butuh lebih banyak cash</b> untuk menjalankan bisnis (buruk). <b>Negatif = bisnis dapat cash</b> di muka (sangat baik — seperti GEICO yang dapat premi sebelum bayar klaim). Dari arus kas operasi — perubahan current assets/liabilities.</div>
+        <div class="dcf-quote">"The insurance float is an extraordinary thing — customers pay us first, we invest the money, and only later do we pay claims. That's a business model that generates cash before it creates obligations."</div>
+        <div class="dcf-quote-attr">— Buffett · Annual Letter 2004</div>
+      </div>
     </div>
   </div>
 
@@ -467,21 +687,47 @@ hr{border:none;border-top:1px solid var(--border);margin:22px 0}
 
   <div class="grid-2">
     <div class="field">
-      <div class="field-hd"><span class="field-name">Growth Rate Fase 1 (Tahun 1-10)</span><span class="fval" id="g1-show">10%</span></div>
+      <div class="field-hd"><span class="field-name">⑧ Growth Rate Fase 1 (Tahun 1–10)</span><span class="fval" id="g1-show">10%</span></div>
       <input type="range" min="1" max="30" value="10" id="g1" oninput="calcAll()">
       <div class="range-lbl"><span>1%</span><span>30%</span></div>
+      <div class="dcf-fmla" style="margin-top:8px">
+        <div class="dcf-fmla-title">Formula kontribusi per tahun</div>
+        <div class="dcf-eq" style="font-size:10px">CF_t = OE × (1 + g)^t ÷ (1 + r)^t</div>
+        <div class="dcf-note"><b>g</b> = growth rate ini | <b>r</b> = discount rate | <b>t</b> = tahun ke-t<br>Buffett: <b>gunakan angka konservatif.</b> Bisnis yang sungguh bagus tidak butuh asumsi pertumbuhan agresif untuk terlihat murah.</div>
+        <div class="dcf-quote">"Growth is always a component in the calculation of value. The question is whether additional value from growth is sufficient to justify the premium being asked."</div>
+        <div class="dcf-quote-attr">— Buffett · Annual Letter 1992</div>
+      </div>
     </div>
     <div class="field">
-      <div class="field-hd"><span class="field-name">Terminal Growth Rate (setelah Tahun 10)</span><span class="fval" id="g2-show">3%</span></div>
+      <div class="field-hd"><span class="field-name">⑨ Terminal Growth Rate (setelah Tahun 10)</span><span class="fval" id="g2-show">3%</span></div>
       <input type="range" min="1" max="8" value="3" id="g2" oninput="calcAll()">
       <div class="range-lbl"><span>1% (GDP low)</span><span>8% (aggressive)</span></div>
+      <div class="dcf-fmla" style="margin-top:8px">
+        <div class="dcf-fmla-title">Formula terminal value (Gordon Growth)</div>
+        <div class="dcf-eq" style="font-size:10px">TV = OE × (1+g)^10 × (1+gT) ÷ (r − gT) ÷ (1+r)^10</div>
+        <div class="dcf-note"><b>gT</b> = terminal growth (ini). Tidak boleh melebihi GDP growth jangka panjang (~3%). Inflating terminal growth adalah cara Wall Street memanipulasi valuasi. <b>Buffett: pakai 3% atau kurang.</b></div>
+        <div class="dcf-quote">"Terminal value is where most valuation models get dishonest — people plug in numbers that make their price target work. We prefer to be roughly right rather than precisely wrong."</div>
+        <div class="dcf-quote-attr">— Buffett · Shareholder Meeting 2003</div>
+      </div>
     </div>
   </div>
 
   <div class="field">
-    <div class="field-hd"><span class="field-name">Discount Rate — Buffett pakai 9–10% (US 30yr bond rate + equity risk)</span><span class="fval" id="dr-show">10%</span></div>
+    <div class="field-hd"><span class="field-name">⑩ Discount Rate (Required Rate of Return)</span><span class="fval" id="dr-show">10%</span></div>
     <input type="range" min="6" max="18" value="10" id="disc-rate" oninput="calcAll()">
-    <div class="range-lbl"><span>6% (risk-free + sedikit premium)</span><span>18% (very risky/early stage)</span></div>
+    <div class="range-lbl"><span>6% (low risk)</span><span>18% (early stage/crypto)</span></div>
+    <div class="dcf-fmla" style="margin-top:8px">
+      <div class="dcf-fmla-title">Apa itu Discount Rate?</div>
+      <div class="dcf-eq" style="font-size:10px">r = Risk-Free Rate + Equity Risk Premium + Business Risk</div>
+      <div class="dcf-note">
+        <b>Risk-Free Rate</b> = US 30-yr Treasury (~4.5% saat ini)<br>
+        <b>Equity Risk Premium</b> = kompensasi atas risk pasar saham (~4-5%)<br>
+        <b>Business Risk</b> = untuk bisnis volatile/early stage (tambah 3-8%)<br><br>
+        <b>Buffett pakai 9–10%</b> untuk bisnis established. Untuk startup crypto/tech tanpa track record → pakai 15–18%.
+      </div>
+      <div class="dcf-quote">"I use the long-term government bond rate as the risk-free rate. I don't use betas or MPT. The appropriate discount rate is simply what you could earn in the most risk-free available investment, plus a reasonable premium for the uncertainty you're taking on."</div>
+      <div class="dcf-quote-attr">— Buffett · Shareholder Meeting 1998</div>
+    </div>
   </div>
 
   <div class="card">
