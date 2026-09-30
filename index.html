@@ -1126,15 +1126,36 @@ function initMOSChart(){
   if(S.mosInit)return;
   const ctx=document.getElementById('mos-chart');if(!ctx)return;
   const labels=[];for(let p=0;p<=200;p+=10)labels.push(p+'%');
-  S.mosChart=new Chart(ctx.getContext('2d'),{type:'line',data:{labels,datasets:[{label:'MOS %',data:[],borderColor:'var(--gold)',backgroundColor:'transparent',borderWidth:2,pointRadius:0,tension:.3},{label:'25% threshold',data:new Array(21).fill(25),borderColor:'rgba(31,138,82,.5)',borderWidth:1,borderDash:[4,4],pointRadius:0,fill:false},{label:'40% threshold',data:new Array(21).fill(40),borderColor:'rgba(31,138,82,.8)',borderWidth:1,borderDash:[2,2],pointRadius:0,fill:false},{label:'Current price',data:new Array(21).fill(null),borderColor:'var(--red2)',borderWidth:2,pointRadius:4,fill:false}]},options:{responsive:true,maintainAspectRatio:true,plugins:{legend:{labels:{color:'#8899AA',font:{size:10,family:'Inter'}}},tooltip:{callbacks:{label:c=>c.dataset.label+': '+(c.raw!=null?c.raw.toFixed(1):'—')+'%'}}},scales:{x:{grid:{color:'rgba(255,255,255,.05)'},ticks:{color:'#8899AA',font:{size:10},maxTicksLimit:11}},y:{grid:{color:'rgba(255,255,255,.05)'},ticks:{color:'#8899AA',font:{size:10},callback:v=>v+'%'}}}}});
+  S.mosChart=new Chart(ctx.getContext('2d'),{type:'line',data:{labels,datasets:[{label:'MOS %',data:[],borderColor:'var(--gold)',backgroundColor:'rgba(201,164,76,.07)',borderWidth:2,pointRadius:0,tension:.3,fill:false},{label:'25% threshold',data:new Array(21).fill(25),borderColor:'rgba(31,138,82,.5)',borderWidth:1,borderDash:[4,4],pointRadius:0,fill:false},{label:'40% threshold',data:new Array(21).fill(40),borderColor:'rgba(31,138,82,.8)',borderWidth:1,borderDash:[2,2],pointRadius:0,fill:false},{label:'Current price',data:new Array(21).fill(null),borderColor:'var(--red2)',borderWidth:0,pointRadius:7,pointBackgroundColor:'var(--red2)',fill:false}]},options:{responsive:true,maintainAspectRatio:true,plugins:{legend:{labels:{color:'#8899AA',font:{size:10,family:'Inter'}}},tooltip:{callbacks:{label:c=>{if(c.raw==null)return null;return c.dataset.label+': '+c.raw.toFixed(1)+'%';}}}},scales:{x:{grid:{color:'rgba(255,255,255,.05)'},ticks:{color:'#8899AA',font:{size:10},maxTicksLimit:11},title:{display:true,text:'Market Price sebagai % dari IV',color:'#8899AA',font:{size:9}}},y:{grid:{color:'rgba(255,255,255,.05)'},min:-100,max:100,ticks:{color:'#8899AA',font:{size:10},callback:v=>v+'%'},title:{display:true,text:'Margin of Safety',color:'#8899AA',font:{size:9}}}}}});
   S.mosInit=true;if(S.iv)updateMOSChart();
 }
 
 function updateMOSChart(){
   if(!S.mosChart||!S.iv)return;
-  const d=[];for(let p=0;p<=200;p+=10){const pr=S.iv*p/100;d.push(pr>0?parseFloat(((S.iv-pr)/S.iv*100).toFixed(1)):null);}
+  // Dataset 0: MOS curve — for each price as % of IV, compute MOS%
+  // x-axis: 0%=price is 0, 100%=price equals IV (MOS=0), 200%=price is 2×IV (MOS=-100%)
+  const d=[];
+  for(let p=0;p<=200;p+=10){
+    const price=S.iv*p/100;
+    const mos=p===0?100:parseFloat(((S.iv-price)/S.iv*100).toFixed(1));
+    d.push(mos);
+  }
   S.mosChart.data.datasets[0].data=d;
-  if(S.mktPrice&&S.iv){const pct=Math.round(S.mktPrice/S.iv*100);const cur=new Array(21).fill(null);const idx=Math.min(20,Math.max(0,Math.round(pct/10)));cur[idx]=S.mos;S.mosChart.data.datasets[3].data=cur;}
+  // Dataset 3: current price marker — find which x-index matches current mktPrice
+  if(S.mktPrice>0&&S.iv>0){
+    const pricePct=S.mktPrice/S.iv*100; // e.g. mktPrice=80% of IV → pricePct=80
+    const idx=Math.round(pricePct/10);   // x-axis step index (0=0%, 10=100%, 20=200%)
+    const cur=new Array(21).fill(null);
+    if(idx>=0&&idx<=20){
+      cur[idx]=S.mos; // plot at the correct MOS% height
+    } else {
+      // price out of chart range — show at edge with annotation
+      cur[idx<0?0:20]=S.mos;
+    }
+    S.mosChart.data.datasets[3].data=cur;
+  } else {
+    S.mosChart.data.datasets[3].data=new Array(21).fill(null);
+  }
   S.mosChart.update();
 }
 
