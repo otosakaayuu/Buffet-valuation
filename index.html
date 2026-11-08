@@ -378,11 +378,13 @@ hr{border:none;border-top:1px solid var(--border);margin:22px 0}
     <div class="fmla-eq">Owner Earnings = Net Income + D&amp;A − Maintenance CapEx ± ΔWorking Capital</div>
     <div class="fmla-vars"><b>Net Income</b> = laba bersih setelah pajak (GAAP)<br><b>D&amp;A</b> = Depreciation &amp; Amortization — non-cash, ditambahkan kembali<br><b>Maintenance CapEx</b> = capex WAJIB untuk mempertahankan posisi bisnis saat ini<br><b>ΔWorking Capital</b> = perubahan modal kerja (positif = butuh lebih banyak cash)</div>
   </div>
+  <div class="field"><div class="field-hd"><span class="field-name">Mata uang seluruh angka di tab ini</span></div><select id="cur" onchange="setCur()"><option value="Rp">Rupiah (Rp, juta)</option><option value="$">Dolar AS ($, juta)</option></select><div class="tip info" style="margin-top:8px">Isi semua angka (laba, D&amp;A, CapEx, modal kerja, harga pasar) dengan mata uang dan periode yang sama. Discount rate harus sesuai mata uang arus kas.</div></div>
+  <div id="input-warn"></div>
   <div class="grid-2">
-    <div class="field"><div class="field-hd"><span class="field-name">① Net Income (juta $)</span></div><input type="number" id="net-income" placeholder="e.g. 100" oninput="calcAll()"></div>
-    <div class="field"><div class="field-hd"><span class="field-name">② D&amp;A — Depresiasi &amp; Amortisasi (juta $)</span></div><input type="number" id="dna" placeholder="e.g. 20" oninput="calcAll()"></div>
-    <div class="field"><div class="field-hd"><span class="field-name">③ Maintenance CapEx (juta $)</span></div><input type="number" id="capex" placeholder="e.g. 15" oninput="calcAll()"></div>
-    <div class="field"><div class="field-hd"><span class="field-name">④ Working Capital Change (juta $)</span></div><input type="number" id="wc" placeholder="e.g. 5" oninput="calcAll()"></div>
+    <div class="field"><div class="field-hd"><span class="field-name">① Net Income (juta)</span></div><input type="number" id="net-income" placeholder="e.g. 100" oninput="calcAll()"></div>
+    <div class="field"><div class="field-hd"><span class="field-name">② D&amp;A — Depresiasi &amp; Amortisasi (juta)</span></div><input type="number" id="dna" placeholder="e.g. 20" oninput="calcAll()"></div>
+    <div class="field"><div class="field-hd"><span class="field-name">③ Maintenance CapEx (juta)</span></div><input type="number" id="capex" placeholder="e.g. 15" oninput="calcAll()"></div>
+    <div class="field"><div class="field-hd"><span class="field-name">④ Working Capital Change (juta)</span></div><input type="number" id="wc" placeholder="e.g. 5" oninput="calcAll()"></div>
   </div>
   <div class="card">
     <div class="res-row"><span class="res-key">Owner Earnings / tahun</span><span class="res-val big" id="oe-val" style="color:var(--gold)">—</span></div>
@@ -419,7 +421,7 @@ hr{border:none;border-top:1px solid var(--border);margin:22px 0}
   <div class="sec-title">Seberapa besar safety cushion-mu?</div>
   <div class="sec-desc">Konsep MOS dari Ben Graham, disempurnakan Buffett. Beli dengan diskon dari nilai intrinsik untuk memproteksi diri dari kesalahan analisis dan ketidakpastian masa depan.</div>
   <div class="q-card"><div class="q-text">"The three most important words in investing are: margin of safety. When you build a bridge, you insist it can carry 30,000 pounds, but you only drive 10,000-pound trucks across it."</div><div class="q-attr">— Warren Buffett · parafrase dari Ben Graham</div></div>
-  <div class="field"><div class="field-hd"><span class="field-name">Harga Pasar Saat Ini — Market Cap atau Enterprise Value (juta $)</span></div><input type="number" id="mkt-price" placeholder="e.g. 600" oninput="calcMOS()"></div>
+  <div class="field"><div class="field-hd"><span class="field-name">Harga Pasar Saat Ini — Market Cap atau Enterprise Value (juta)</span></div><input type="number" id="mkt-price" placeholder="e.g. 600" oninput="calcMOS()"></div>
   <div class="card">
     <div class="res-row"><span class="res-key">Intrinsic Value (dari Step 03)</span><span class="res-val big" id="mos-iv" style="color:var(--gold)">—</span></div>
     <div class="res-row"><span class="res-key">Harga Pasar</span><span class="res-val big" id="mos-mkt">—</span></div>
@@ -851,7 +853,7 @@ const SECTOR_PROFILES = {
   consumer_brand:{label:'Consumer Brand',drMin:9,drMax:11,drNote:'Consumer brand: discount rate 9–11%. Cash flows sangat predictable. Terminal growth 3–4%.',oeNote:'',badges:{roe:'use',roic:'use',gm:'use',nm:'use',de:'use',fcf:'use'},notes:{roe:'',roic:'',gm:'',nm:'',de:'',fcf:''}},
   retail:{label:'Retail',drMin:10,drMax:12,drNote:'Retail: discount rate 10–12%. Lebih cyclical dari pure brand.',oeNote:'',badges:{roe:'use',roic:'use',gm:'mod',nm:'mod',de:'use',fcf:'use'},notes:{roe:'',roic:'',gm:'Retail gross margin biasanya lebih rendah: 20–40%. Bandingkan dengan peer sektor, bukan consumer brand.',nm:'Net margin retail tipis: 2–8%. Hypermart: 1–3%. Specialty retail: 5–12%.',de:'',fcf:''}},
   luxury:{label:'Luxury',drMin:9,drMax:10,drNote:'Luxury: discount rate 9–10%. Paling defensif. Terminal growth bisa 4–5% jika global brand.',oeNote:'',badges:{roe:'use',roic:'use',gm:'use',nm:'use',de:'use',fcf:'use'},notes:{roe:'Luxury ROE sangat tinggi: 25–40%+ karena capital-light + pricing power extreme.',roic:'',gm:'Luxury gross margin: 60–80%. <50% bukan true luxury.',nm:'',de:'',fcf:''}},
-  bank:{label:'Banking',drMin:11,drMax:13,drNote:'Bank Indonesia: discount rate 11–13% (country risk premium). Bank US/developed: 9–11%.',oeNote:'⚠️ Untuk bank, gunakan Net Income langsung sebagai base. D&A dan WC tidak relevan. Isi field ① Net Income = laba bersih bank. Fields lain isi 0.',badges:{roe:'use',roic:'skip',gm:'skip',nm:'use',de:'skip',fcf:'skip'},notes:{roe:'ROE bank: target >15%. BCA: 18–22% konsisten.',roic:'⚠️ SKIP. Pakai ROA sebagai gantinya. ROA >1.5% = bank yang bagus. BCA: ~3%.',gm:'⚠️ SKIP. Pakai Net Interest Margin (NIM). NIM >5% = kuat untuk bank Indonesia.',nm:'',de:'⚠️ SKIP. Bank D/E 8–10× adalah NORMAL. Pakai CAR >18% dan NPL <2% sebagai pengganti.',fcf:'⚠️ SKIP. Monitor: Loan Growth, NPL trend, CASA ratio, dan Provision Coverage ratio.'}},
+  bank:{label:'Banking',drMin:11,drMax:13,drNote:'Bank Indonesia: discount rate 11–13% (country risk premium). Bank US/developed: 9–11%.',oeNote:'⚠️ Untuk bank, laba bersih tidak seluruhnya bisa diambil pemilik karena sebagian harus ditahan untuk menjaga rasio kecukupan modal (CAR) saat kredit tumbuh. Isi field ① dengan laba yang dapat dibagikan, yaitu dividen atau laba bersih dikurangi laba yang ditahan untuk pertumbuhan modal. D&A, CapEx, dan modal kerja isi 0. Lihat Damodaran (2012) tentang valuasi perusahaan jasa keuangan.',badges:{roe:'use',roic:'skip',gm:'skip',nm:'use',de:'skip',fcf:'skip'},notes:{roe:'ROE bank: target >15%. BCA: 18–22% konsisten.',roic:'⚠️ SKIP. Pakai ROA sebagai gantinya. ROA >1.5% = bank yang bagus. BCA: ~3%.',gm:'⚠️ SKIP. Pakai Net Interest Margin (NIM). NIM >5% = kuat untuk bank Indonesia.',nm:'',de:'⚠️ SKIP. Bank D/E 8–10× adalah NORMAL. Pakai CAR >18% dan NPL <2% sebagai pengganti.',fcf:'⚠️ SKIP. Monitor: Loan Growth, NPL trend, CASA ratio, dan Provision Coverage ratio.'}},
   insurance:{label:'Insurance',drMin:11,drMax:12,drNote:'Insurance: discount rate 11–12%. Bergantung pada investment yield dan underwriting discipline.',oeNote:'⚠️ Insurance: isi Net Income dari underwriting profit + investment income. D&A dan CapEx minimal — isi 0. WC isi negatif (premi diterima di muka).',badges:{roe:'use',roic:'skip',gm:'skip',nm:'mod',de:'skip',fcf:'skip'},notes:{roe:'',roic:'⚠️ SKIP. Pakai Combined Ratio. <95% = underwriting profit. >100% = underwriting loss.',gm:'⚠️ SKIP. Pakai Loss Ratio = Claims ÷ Premiums. <65% excellent. Loss + Expense = Combined Ratio.',nm:'Pisahkan underwriting profit dari investment income untuk analisis yang lebih akurat.',de:'⚠️ SKIP. Policy reserves bukan debt biasa. Pakai Risk-Based Capital (RBC) >200% per OJK.',fcf:'⚠️ SKIP. Pakai Float Growth + Investment Income Growth sebagai proxy kualitas bisnis.'}},
   fintech:{label:'Fintech',drMin:14,drMax:18,drNote:'Fintech: discount rate 14–18%. Sangat bergantung pada regulatory environment dan burn rate.',oeNote:'⚠️ Fintech pre-profit: isi Net Income negatif/kecil. Hasil Owner Earnings mungkin negatif — normal untuk growth stage.',badges:{roe:'mod',roic:'mod',gm:'mod',nm:'mod',de:'skip',fcf:'mod'},notes:{roe:'ROE tidak relevan jika masih rugi. Pakai Revenue Growth + Gross Margin trend sebagai proxy.',roic:'Pakai Take Rate (revenue/GMV) sebagai proxy moat. Take Rate stabil/naik = pricing power berkembang.',gm:'Gross margin fintech payment: 30–50%. Lending fintech: >60%. <30% = commodity play.',nm:'Normalized net margin setelah phase subsidi selesai. Cek unit economics per cohort.',de:'SKIP. Yang penting: Cash Runway (bulan) dan Burn Multiple (burn per ARR added).',fcf:'Pakai GMV Growth + Take Rate × GMV = Revenue trajectory sebagai leading indicator.'}},
   investment:{label:'Holding/Conglomerate',drMin:10,drMax:12,drNote:'Conglomerate: discount rate 10–12%. Sum-of-parts lebih relevan dari single consolidated DCF.',oeNote:'⚠️ Conglomerate: gunakan sum-of-parts approach. Hitung IV tiap bisnis terpisah, sum, minus holding discount 10–20%.',badges:{roe:'mod',roic:'mod',gm:'skip',nm:'mod',de:'use',fcf:'mod'},notes:{roe:'ROE konglomerat bisa misleading karena mix sektor. Lebih baik analisis tiap anak usaha terpisah.',roic:'Pakai ROIC per segmen. Segmen yang ROIC < WACC adalah value destroyer.',gm:'SKIP untuk consolidated. Analisis per segment karena margin sangat bervariasi antar bisnis.',nm:'Consolidated net margin perlu di-adjust untuk one-off gain/loss dari divestasi aset.',de:'',fcf:'Sum-of-parts FCF lebih akurat. Holding discount 15–20% dari sum IV adalah normal.'}},
@@ -879,6 +881,17 @@ const SECTOR_PROFILES = {
 // STATE
 // ════════════════════════════════════
 const S = {checks:{},stars:[0,0,0,0,0,0],pricingPower:5,retention:80,g1:10,g2:3,dr:10,oe:0,iv:0,ivDCF:0,ivTerm:0,mktPrice:0,mos:null,metrics:{roe:0,roic:0,gm:0,nm:0,de:0,fcf:0},dcfChart:null,mosChart:null,dcfInit:false,mosInit:false,sector:'',metricsScore:0,bqScore:0,moatScore:0,mosScore:0,mgmtScore:0,annualDCF:null};
+
+let CUR='Rp';
+function fmtM(x,d){
+  const n=Number(x).toLocaleString(CUR==='Rp'?'id-ID':'en-US',{minimumFractionDigits:d||0,maximumFractionDigits:d||0});
+  return CUR==='Rp'?'Rp'+n+' jt':'$'+n+'M';
+}
+function setCur(){CUR=document.getElementById('cur').value;calcAll();}
+function warn(msgs){
+  const w=document.getElementById('input-warn');if(!w)return;
+  w.innerHTML=msgs.length?'<div class="tip danger"><strong>⚠️ Periksa masukan:</strong><br>'+msgs.join('<br>')+'</div>':'';
+}
 
 // ════════════════════════════════════
 // NAVIGATION
@@ -990,15 +1003,20 @@ function updateMetrics(){
   set('r-roe',S.metrics.roe?(S.metrics.roe>=15?'✓ '+S.metrics.roe+'% (≥15%)':'✗ '+S.metrics.roe+'% (<15%)'):'—',S.metrics.roe>=15);
   set('r-roic',S.metrics.roic?(S.metrics.roic>=12?'✓ '+S.metrics.roic+'% (≥12%)':'✗ '+S.metrics.roic+'% (<12%)'):'—',S.metrics.roic>=12);
   set('r-cap',S.metrics.gm?(S.metrics.gm>=40?'✓ Gross '+S.metrics.gm+'% — Pricing power ada':'⚠ Gross '+S.metrics.gm+'% — Lemah'):'—',S.metrics.gm>=40);
-  set('r-debt',S.metrics.de!==0?(S.metrics.de<=1?'✓ D/E '+S.metrics.de+' (konservatif)':'✗ D/E '+S.metrics.de+' (tinggi)'):'—',S.metrics.de>0&&S.metrics.de<=1);
-  let ms=0;
-  if(S.metrics.roe>=20)ms+=6;else if(S.metrics.roe>=15)ms+=4;else if(S.metrics.roe>0)ms+=1;
-  if(S.metrics.roic>=15)ms+=6;else if(S.metrics.roic>=12)ms+=4;else if(S.metrics.roic>0)ms+=1;
-  if(S.metrics.gm>=60)ms+=5;else if(S.metrics.gm>=40)ms+=3;else if(S.metrics.gm>0)ms+=1;
-  if(S.metrics.nm>=20)ms+=4;else if(S.metrics.nm>=10)ms+=2;else if(S.metrics.nm>0)ms+=1;
-  if(S.metrics.de>0&&S.metrics.de<=0.5)ms+=4;else if(S.metrics.de>0&&S.metrics.de<=1)ms+=2;
-  if(S.metrics.fcf>=15)ms+=5;else if(S.metrics.fcf>=8)ms+=3;else if(S.metrics.fcf>0)ms+=1;
-  S.metricsScore=Math.min(30,ms);
+  set('r-debt',document.getElementById('m-de').value!==''?(S.metrics.de===0?'✓ Tanpa utang (D/E 0)':S.metrics.de<=1?'✓ D/E '+S.metrics.de+' (konservatif)':'✗ D/E '+S.metrics.de+' (tinggi)'):'—',document.getElementById('m-de').value!==''&&S.metrics.de<=1);
+  const filled=id=>document.getElementById(id).value!=='';
+  const prof=SECTOR_PROFILES[S.sector]||null;
+  const act=k=>!(prof&&prof.badges[k]==='skip');
+  let ms=0,mx=0;
+  if(act('roe')){mx+=6;if(S.metrics.roe>=20)ms+=6;else if(S.metrics.roe>=15)ms+=4;else if(S.metrics.roe>0)ms+=1;}
+  if(act('roic')){mx+=6;if(S.metrics.roic>=15)ms+=6;else if(S.metrics.roic>=12)ms+=4;else if(S.metrics.roic>0)ms+=1;}
+  if(act('gm')){mx+=5;if(S.metrics.gm>=60)ms+=5;else if(S.metrics.gm>=40)ms+=3;else if(S.metrics.gm>0)ms+=1;}
+  if(act('nm')){mx+=4;if(S.metrics.nm>=20)ms+=4;else if(S.metrics.nm>=10)ms+=2;else if(S.metrics.nm>0)ms+=1;}
+  if(act('de')){mx+=4;if(filled('m-de')&&S.metrics.de>=0){if(S.metrics.de<=0.5)ms+=4;else if(S.metrics.de<=1)ms+=2;}}
+  if(act('fcf')){mx+=5;if(S.metrics.fcf>=15)ms+=5;else if(S.metrics.fcf>=8)ms+=3;else if(S.metrics.fcf>0)ms+=1;}
+  // skor dihitung hanya dari metrik yang berlaku untuk sektor, lalu diskalakan ke 30
+  ms=mx>0?Math.round(ms/mx*30):0;
+  S.metricsScore=Math.min(30,ms);S.metricsMax=mx;
   const msel=document.getElementById('r-mscore');if(msel){msel.textContent=S.metricsScore+'/30';msel.style.color=ms>=20?'var(--green2)':ms>=12?'var(--gold)':'var(--red2)';}
   updateBQ();
 }
@@ -1042,19 +1060,34 @@ function calcAll(){
   const g2El=document.getElementById('g2-show');if(g2El)g2El.textContent=S.g2+'%';
   const drEl=document.getElementById('dr-show');if(drEl)drEl.textContent=S.dr+'%';
   S.oe=ni+dna-capex-wc;
-  const oeEl=document.getElementById('oe-val');if(oeEl)oeEl.textContent=ni?'$'+S.oe.toFixed(1)+'M':'—';
+  const niRaw=document.getElementById('net-income').value;
+  const oeEl=document.getElementById('oe-val');if(oeEl)oeEl.textContent=niRaw!==''?fmtM(S.oe,1):'—';
   const cpct=ni>0?(capex/ni*100).toFixed(0):0;
-  const oeiEl=document.getElementById('oe-intensity');if(oeiEl)oeiEl.textContent=ni?(cpct<20?'✓ Capital-light ('+cpct+'%)':cpct<50?'⚠ Moderate ('+cpct+'%)':'✗ Capital-intensive ('+cpct+'%)'):'—';
-  if(!ni){const ivEl=document.getElementById('iv-total');if(ivEl)ivEl.textContent='—';return;}
+  const oeiEl=document.getElementById('oe-intensity');if(oeiEl)oeiEl.textContent=ni>0?(cpct<20?'✓ Capital-light ('+cpct+'%)':cpct<50?'⚠ Moderate ('+cpct+'%)':'✗ Capital-intensive ('+cpct+'%)'):'—';
+  const msgs=[];
+  S.iv=0;S.ivDCF=0;S.ivTerm=0;S.annualDCF=null;
+  const resetIV=()=>{['iv-total','iv-dcf','iv-term','iv-termpct'].forEach(i=>{const e=document.getElementById(i);if(e)e.textContent='—';});calcMOS();};
+  if(niRaw===''){warn(msgs);resetIV();return;}
+  if(ni<=0)msgs.push('Net income nol atau negatif. Model DCF owner earnings tidak berlaku untuk perusahaan yang belum menghasilkan laba, sehingga nilai intrinsik tidak dihitung dan skor margin of safety = 0.');
+  else if(S.oe<=0)msgs.push('Owner earnings nol atau negatif setelah D&amp;A, CapEx, dan modal kerja. Nilai intrinsik tidak dapat dihitung.');
+  if(capex<0||dna<0)msgs.push('D&amp;A dan CapEx diisi sebagai angka positif.');
+  const mpRaw=document.getElementById('mkt-price').value;
+  if(mpRaw!==''&&parseFloat(mpRaw)<=0)msgs.push('Harga pasar harus lebih besar dari nol.');
+  if(ni>0&&S.oe>0){
+    if(S.g1>=S.dr)msgs.push('Growth fase 1 ('+S.g1+'%) sama atau lebih besar dari discount rate ('+S.dr+'%). Nilai intrinsik akan membengkak; periksa kembali asumsi ini.');
+    if(S.dr<=S.g2)msgs.push('Discount rate ≤ terminal growth, sehingga rumus Gordon tidak berlaku. Nilai terminal memakai pengali tetap 15× arus kas tahun ke-10.');
+  }
+  warn(msgs);
+  if(ni<=0||S.oe<=0){resetIV();return;}
   const g=S.g1/100,r=S.dr/100,gT=S.g2/100;
   S.ivDCF=0;const annual=[];
   for(let t=1;t<=10;t++){const cf=S.oe*Math.pow(1+g,t)/Math.pow(1+r,t);S.ivDCF+=cf;annual.push(parseFloat(cf.toFixed(2)));}
   const tN=S.oe*Math.pow(1+g,10)*(1+gT);
   S.ivTerm=r>gT?tN/((r-gT)*Math.pow(1+r,10)):S.oe*Math.pow(1+g,10)*15/Math.pow(1+r,10);
   S.iv=S.ivDCF+S.ivTerm;S.annualDCF=annual;
-  const ivEl=document.getElementById('iv-total');if(ivEl)ivEl.textContent='$'+S.iv.toFixed(0)+'M';
-  const ivdEl=document.getElementById('iv-dcf');if(ivdEl)ivdEl.textContent='$'+S.ivDCF.toFixed(0)+'M';
-  const ivtEl=document.getElementById('iv-term');if(ivtEl)ivtEl.textContent='$'+S.ivTerm.toFixed(0)+'M';
+  const ivEl=document.getElementById('iv-total');if(ivEl)ivEl.textContent=fmtM(S.iv,0);
+  const ivdEl=document.getElementById('iv-dcf');if(ivdEl)ivdEl.textContent=fmtM(S.ivDCF,0);
+  const ivtEl=document.getElementById('iv-term');if(ivtEl)ivtEl.textContent=fmtM(S.ivTerm,0);
   const ivpEl=document.getElementById('iv-termpct');if(ivpEl)ivpEl.textContent=(S.ivTerm/S.iv*100).toFixed(0)+'%';
   if(S.dcfInit)updateDCFChart(annual);
   calcMOS();updateTicker();
@@ -1062,9 +1095,9 @@ function calcAll(){
 
 function calcMOS(){
   S.mktPrice=parseFloat(document.getElementById('mkt-price').value)||0;
-  const mosiEl=document.getElementById('mos-iv');if(mosiEl)mosiEl.textContent=S.iv?'$'+S.iv.toFixed(0)+'M':'—';
-  const mosmEl=document.getElementById('mos-mkt');if(mosmEl)mosmEl.textContent=S.mktPrice?'$'+S.mktPrice+'M':'—';
-  if(!S.iv||!S.mktPrice){const p=document.getElementById('mos-pct');if(p)p.textContent='—';return;}
+  const mosiEl=document.getElementById('mos-iv');if(mosiEl)mosiEl.textContent=S.iv?fmtM(S.iv,0):'—';
+  const mosmEl=document.getElementById('mos-mkt');if(mosmEl)mosmEl.textContent=S.mktPrice?fmtM(S.mktPrice,0):'—';
+  if(!S.iv||!(S.mktPrice>0)){S.mos=null;S.mosScore=0;const p=document.getElementById('mos-pct');if(p)p.textContent='—';const st0=document.getElementById('mos-status');if(st0)st0.textContent='';updateMOSGauge();updateTicker();return;}
   S.mos=(S.iv-S.mktPrice)/S.iv*100;
   const mp=document.getElementById('mos-pct');
   if(mp){mp.textContent=S.mos.toFixed(1)+'%';mp.style.color=S.mos>=40?'var(--green2)':S.mos>=25?'var(--gold)':S.mos>=0?'orange':'var(--red2)';}
@@ -1072,11 +1105,11 @@ function calcMOS(){
   if(bar){bar.style.width=Math.min(100,Math.max(0,S.mos))+'%';bar.style.background=S.mos>=40?'var(--green)':S.mos>=25?'var(--gold)':S.mos>=0?'orange':'var(--red)';}
   const st=document.getElementById('mos-status');
   if(st){
-    if(S.mos>=50){st.textContent='🟢 DEEP VALUE — Buffett would be very interested';st.style.color='var(--green2)';}
-    else if(S.mos>=40){st.textContent='🟢 STRONG BUY — Solid margin of safety';st.style.color='var(--green2)';}
-    else if(S.mos>=25){st.textContent='🟡 BUY — Acceptable, Buffett minimum threshold';st.style.color='var(--gold)';}
-    else if(S.mos>=0){st.textContent='🟠 FAIR — No margin. Buffett would wait.';st.style.color='orange';}
-    else{st.textContent='🔴 OVERVALUED — '+(-S.mos).toFixed(0)+'% di atas nilai intrinsik';st.style.color='var(--red2)';}
+    if(S.mos>=50){st.textContent='🟢 MOS SANGAT LEBAR — harga jauh di bawah nilai intrinsik';st.style.color='var(--green2)';}
+    else if(S.mos>=40){st.textContent='🟢 MOS LEBAR — bantalan keamanan kuat';st.style.color='var(--green2)';}
+    else if(S.mos>=25){st.textContent='🟡 MOS CUKUP — batas minimum yang lazim dipakai (25%)';st.style.color='var(--gold)';}
+    else if(S.mos>=0){st.textContent='🟠 MOS TIPIS — hampir tanpa bantalan keamanan';st.style.color='orange';}
+    else{st.textContent='🔴 DI ATAS NILAI INTRINSIK — '+(-S.mos).toFixed(0)+'% lebih mahal';st.style.color='var(--red2)';}
   }
   S.mosScore=S.mos>=50?25:S.mos>=40?22:S.mos>=25?17:S.mos>=15?10:S.mos>=0?5:0;
   if(S.mosInit){updateMOSChart();buildSensMatrix();}
@@ -1105,10 +1138,10 @@ function updateTicker(){
   const ttEl=document.getElementById('t-total');if(ttEl){ttEl.textContent=total+'/100';ttEl.style.color=total>=75?'var(--green2)':total>=55?'var(--gold)':'var(--dim)';}
   const pill=document.getElementById('t-pill');
   if(pill){
-    if(total>=80){pill.textContent='🟢 STRONG BUY';pill.style.borderColor='var(--green2)';pill.style.color='var(--green2)';pill.style.background='rgba(28,138,82,.1)';}
-    else if(total>=65){pill.textContent='🟡 BUY';pill.style.borderColor='var(--gold)';pill.style.color='var(--gold)';pill.style.background='rgba(201,164,76,.1)';}
-    else if(total>=45){pill.textContent='🟠 WAIT';pill.style.borderColor='orange';pill.style.color='orange';pill.style.background='rgba(255,165,0,.1)';}
-    else if(total>0){pill.textContent='🔴 AVOID';pill.style.borderColor='var(--red2)';pill.style.color='var(--red2)';pill.style.background='rgba(176,48,48,.1)';}
+    if(total>=80){pill.textContent='🟢 SANGAT SESUAI';pill.style.borderColor='var(--green2)';pill.style.color='var(--green2)';pill.style.background='rgba(28,138,82,.1)';}
+    else if(total>=60){pill.textContent='🟡 SESUAI (CATATAN)';pill.style.borderColor='var(--gold)';pill.style.color='var(--gold)';pill.style.background='rgba(201,164,76,.1)';}
+    else if(total>=40){pill.textContent='🟠 PANTAU';pill.style.borderColor='orange';pill.style.color='orange';pill.style.background='rgba(255,165,0,.1)';}
+    else if(total>0){pill.textContent='🔴 TIDAK SESUAI';pill.style.borderColor='var(--red2)';pill.style.color='var(--red2)';pill.style.background='rgba(176,48,48,.1)';}
     else{pill.textContent='Belum dinilai';pill.style.borderColor='var(--dim)';pill.style.color='var(--dim)';pill.style.background='transparent';}
   }
 }
@@ -1116,7 +1149,7 @@ function updateTicker(){
 function initDCFChart(){
   if(S.dcfInit)return;
   const ctx=document.getElementById('dcf-chart');if(!ctx)return;
-  S.dcfChart=new Chart(ctx.getContext('2d'),{type:'bar',data:{labels:['Yr1','Yr2','Yr3','Yr4','Yr5','Yr6','Yr7','Yr8','Yr9','Yr10','Terminal'],datasets:[{label:'Discounted CF ($M)',data:new Array(11).fill(0),backgroundColor:[...Array(10).fill('rgba(201,164,76,.6)'),'rgba(31,138,82,.7)'],borderColor:[...Array(10).fill('rgba(201,164,76,.9)'),'rgba(40,181,107,.9)'],borderWidth:1.5,borderRadius:4}]},options:{responsive:true,maintainAspectRatio:true,plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>'$'+c.raw.toFixed(1)+'M'}}},scales:{x:{grid:{color:'rgba(255,255,255,.05)'},ticks:{color:'#8899AA',font:{family:'JetBrains Mono',size:10}}},y:{grid:{color:'rgba(255,255,255,.05)'},ticks:{color:'#8899AA',font:{family:'JetBrains Mono',size:10},callback:v=>'$'+v+'M'}}}}});
+  S.dcfChart=new Chart(ctx.getContext('2d'),{type:'bar',data:{labels:['Yr1','Yr2','Yr3','Yr4','Yr5','Yr6','Yr7','Yr8','Yr9','Yr10','Terminal'],datasets:[{label:'Arus kas terdiskonto (juta)',data:new Array(11).fill(0),backgroundColor:[...Array(10).fill('rgba(201,164,76,.6)'),'rgba(31,138,82,.7)'],borderColor:[...Array(10).fill('rgba(201,164,76,.9)'),'rgba(40,181,107,.9)'],borderWidth:1.5,borderRadius:4}]},options:{responsive:true,maintainAspectRatio:true,plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>fmtM(c.raw,1)}}},scales:{x:{grid:{color:'rgba(255,255,255,.05)'},ticks:{color:'#8899AA',font:{family:'JetBrains Mono',size:10}}},y:{grid:{color:'rgba(255,255,255,.05)'},ticks:{color:'#8899AA',font:{family:'JetBrains Mono',size:10},callback:v=>fmtM(v,0)}}}}});
   S.dcfInit=true;if(S.annualDCF)updateDCFChart(S.annualDCF);
 }
 
@@ -1167,10 +1200,11 @@ function updateMOSGauge(){
 }
 
 function buildSensMatrix(){
-  const growths=[3,5,7,10,12,15,20];const discounts=[7,8,9,10,12,15];
+  const growths=[...new Set([3,5,7,9,10,12,15,20,S.g1])].sort((a,b)=>a-b);const discounts=[...new Set([7,8,9,10,11,12,13,15,S.dr])].sort((a,b)=>a-b);
+  const thead=document.querySelector('.sens-tbl thead');if(thead)thead.innerHTML='<tr><th>Growth \\ Disc</th>'+discounts.map(d=>'<th'+(d===S.dr?' style="color:var(--gold)"':'')+'>'+d+'%</th>').join('')+'</tr>';
   const tbody=document.getElementById('sens-body');if(!tbody)return;
   tbody.innerHTML='';
-  if(!S.oe){tbody.innerHTML='<tr><td colspan="7" style="text-align:center;color:var(--dim);padding:16px;font-size:12px">Masukkan Owner Earnings di Step 03 dulu</td></tr>';return;}
+  if(!(S.oe>0)){tbody.innerHTML='<tr><td colspan="10" style="text-align:center;color:var(--dim);padding:16px;font-size:12px">Masukkan Owner Earnings di Step 03 dulu</td></tr>';return;}
   const g2=S.g2/100;
   growths.forEach(g=>{
     const tr=document.createElement('tr');
@@ -1181,7 +1215,7 @@ function buildSensMatrix(){
       const tN=S.oe*Math.pow(1+gR,10)*(1+g2);iv+=dR>g2?tN/((dR-g2)*Math.pow(1+dR,10)):S.oe*Math.pow(1+gR,10)*15/Math.pow(1+dR,10);
       const td=document.createElement('td');
       const mos=S.mktPrice>0?(iv-S.mktPrice)/iv*100:null;
-      td.textContent='$'+iv.toFixed(0)+'M';
+      td.textContent=fmtM(iv,0);
       if(d===S.dr&&g===S.g1){td.style.outline='2px solid var(--gold)';td.style.outlineOffset='-1px';}
       if(mos!==null){if(mos>=40)td.style.background='rgba(21,92,55,.85)';else if(mos>=25)td.style.background='rgba(40,130,80,.7)';else if(mos>=0)td.style.background='rgba(184,122,28,.65)';else td.style.background='rgba(176,48,48,.7)';}
       else td.style.background='rgba(30,42,63,.8)';
@@ -1204,23 +1238,23 @@ function calcVerdict(){
   ['bv-biz','bv-moat','bv-mos','bv-mgmt'].forEach((id,i)=>{const val=[bq,mo,ms,mg][i];const el=document.getElementById(id);if(el){el.textContent=val;el.style.color=val>=18?'var(--green2)':val>=12?'var(--gold)':'var(--red2)';}});
   const bnEl=document.getElementById('v-biz');if(bnEl)bnEl.textContent=document.getElementById('biz-name').value||'—';
   const bsEl=document.getElementById('v-sector');if(bsEl){const sel=document.getElementById('biz-sector');bsEl.textContent=sel?sel.options[sel.selectedIndex]?.text||'—':'—';}
-  const voeEl=document.getElementById('v-oe');if(voeEl)voeEl.textContent=S.oe?'$'+S.oe.toFixed(1)+'M':'—';
-  const vivEl=document.getElementById('v-iv');if(vivEl)vivEl.textContent=S.iv?'$'+S.iv.toFixed(0)+'M':'—';
+  const voeEl=document.getElementById('v-oe');if(voeEl)voeEl.textContent=S.oe?fmtM(S.oe,1):'—';
+  const vivEl=document.getElementById('v-iv');if(vivEl)vivEl.textContent=S.iv?fmtM(S.iv,0):'—';
   const vmosEl=document.getElementById('v-mos-final');if(vmosEl)vmosEl.textContent=S.mos!==null?S.mos.toFixed(1)+'%':'—';
   const ring=document.getElementById('v-ring'),vword=document.getElementById('v-word'),vdesc=document.getElementById('v-desc');
   const cfgs={
-    strong:{c:'var(--green2)',w:'STRONG BUY',d:'Bisnis ini memenuhi hampir semua kriteria Buffett. Moat kuat, manajemen solid, dan harga memberikan cushion yang cukup untuk hold-forever portfolio.',q:'Wonderful company at a fair price. When you find something you are certain about, act decisively and hold forever.',qa:'Warren Buffett · Apple thesis 2016'},
-    buy:{c:'var(--gold)',w:'BUY — dengan catatan',d:'Fundamental bagus tapi ada satu-dua komponen yang belum optimal. Pertimbangkan position sizing lebih kecil sambil menunggu harga lebih baik.',q:"It's far better to buy a wonderful company at a fair price than a fair company at a wonderful price.",qa:"Warren Buffett · See's Candies lesson, 1972"},
-    wait:{c:'orange',w:'WAIT — Masuk watchlist',d:'Ada potensi tapi valuasi belum menarik atau ada aspek bisnis yang perlu lebih diyakini. Buffett sangat sabar — dia bisa menunggu bertahun-tahun.',q:'The stock market is a device for transferring money from the impatient to the patient.',qa:'Warren Buffett · Shareholder Meeting'},
-    avoid:{c:'var(--red2)',w:'AVOID — Tidak memenuhi syarat',d:'Terlalu banyak kriteria yang tidak terpenuhi. Cash adalah posisi valid ketika tidak ada yang compelling.',q:'The most important thing to do if you find yourself in a hole is to stop digging.',qa:'Warren Buffett · Annual Letter 2002'}
+    strong:{c:'var(--green2)',w:'SANGAT SESUAI KRITERIA BUFFETT',d:'Bisnis ini memenuhi hampir semua kriteria Buffett. Moat kuat, manajemen solid, dan harga memberikan cushion yang cukup untuk hold-forever portfolio.',q:'',qa:''},
+    buy:{c:'var(--gold)',w:'SESUAI — dengan catatan',d:'Fundamental bagus tapi ada satu-dua komponen yang belum optimal. Pertimbangkan position sizing lebih kecil sambil menunggu harga lebih baik.',q:"It's far better to buy a wonderful company at a fair price than a fair company at a wonderful price.",qa:"Warren Buffett · Surat tahunan Berkshire Hathaway 1989"},
+    wait:{c:'orange',w:'PANTAU — Masuk daftar pantau',d:'Ada potensi tapi valuasi belum menarik atau ada aspek bisnis yang perlu lebih diyakini. Buffett sangat sabar — dia bisa menunggu bertahun-tahun.',q:'',qa:''},
+    avoid:{c:'var(--red2)',w:'TIDAK SESUAI KRITERIA',d:'Terlalu banyak kriteria yang tidak terpenuhi. Cash adalah posisi valid ketika tidak ada yang compelling.',q:'',qa:''}
   };
   const cfg=total>=80?cfgs.strong:total>=60?cfgs.buy:total>=40?cfgs.wait:cfgs.avoid;
   if(ring){ring.style.borderColor=cfg.c;ring.style.background=cfg.c+'22';}
   if(vn)vn.style.color=cfg.c;
   if(vword){vword.style.color=cfg.c;vword.textContent=cfg.w;}
   if(vdesc)vdesc.textContent=cfg.d;
-  const qtEl=document.getElementById('v-quote-text');if(qtEl)qtEl.textContent='"'+cfg.q+'"';
-  const qaEl=document.getElementById('v-quote-attr');if(qaEl)qaEl.textContent='— '+cfg.qa;
+  const qtEl=document.getElementById('v-quote-text');if(qtEl){qtEl.textContent=cfg.q?'"'+cfg.q+'"':'';const qc=qtEl.parentElement;if(qc)qc.style.display=cfg.q?'':'none';}
+  const qaEl=document.getElementById('v-quote-attr');if(qaEl)qaEl.textContent=cfg.qa?'— '+cfg.qa:'';
   const setRow=(n,s,score,good)=>{const st=document.getElementById('r'+n+'-status');const sc=document.getElementById('r'+n+'-score');if(st){st.textContent=s;st.style.color=good?'var(--green2)':'var(--red2)';}if(sc)sc.textContent=score;};
   setRow(1,bq>=15?'✓ Dipahami':'✗ Kurang dipahami',bq+'/25',bq>=15);
   setRow(2,mo>=15?'✓ Economics solid':'✗ Economics lemah',mo+'/25',mo>=15);
